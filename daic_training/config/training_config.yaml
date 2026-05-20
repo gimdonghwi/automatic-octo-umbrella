@@ -1,0 +1,118 @@
+# DAIC-WOZ Depression Detection Training Configuration
+
+data:
+  base_path: ${DAIC_ROOT:../../data/DAIC-WOZ}
+  preprocessed_file: preprocessed_sequence_dataset.pkl
+  metadata_file: metadataset.csv
+  
+  # Feature dimensions
+  wavlm_dim: 768
+  wav2vec_dim: 768
+  enhanced_ttr_dim: 6
+  num_qtypes: 5
+  
+  # PHQ scoring
+  phq_max: 24.0
+  depression_threshold: 10  # PHQ >= 10 indicates depression
+
+model:
+  # Architecture
+  d_model: 192
+  nhead: 4
+  num_encoder_layers: 1
+  dim_feedforward: 256
+  dropout: 0.206
+  
+  # Embeddings
+  qtype_embed_dim: 16
+  
+  # Audio fusion
+  aux_compression_ratio: 8  # Compress auxiliary audio features
+  
+  # Positional encoding
+  max_seq_len: 500
+
+training:
+  # Optimization
+  batch_size: 8
+  learning_rate: 0.0001095
+  weight_decay: 0.0000026
+  
+  # Scheduler
+  warmup_epochs: 4
+  max_epochs: 50
+  
+  # Early stopping
+  patience: 15
+  min_delta: 0.001
+  
+  # Loss function
+  loss_type: huber  # Options: mse, weighted_mse, huber
+  loss_alpha: 2.57  # Weight exponent for high PHQ scores
+  
+  # Regularization
+  gradient_clip: 1.0
+
+evaluation:
+  # Metrics
+  primary_metric: balanced_f1  # For model selection
+  
+  # Evaluation frequency
+  eval_every_n_epochs: 1
+  
+  # Test-time augmentation
+  tta_enabled: false
+  
+  # Visualization
+  save_confusion_matrix: true
+  save_predictions: true
+
+cross_validation:
+  # Multiple runs for robustness
+  n_runs: 3
+  random_seed_base: 42
+
+hyperparameter_search:
+  # Optuna configuration
+  n_trials: 30
+  study_name: depression_regression_optuna
+  
+  # Pruning
+  pruner: median
+  pruner_warmup_steps: 5
+  
+  # Search space
+  search_space:
+    d_model: [128, 192, 256, 320]
+    nhead: [4, 8]
+    num_encoder_layers: [1, 2, 3]
+    dim_feedforward: [256, 512, 768]
+    dropout: [0.2, 0.5]
+    qtype_embed_dim: [16, 32, 48]
+    aux_compression_ratio: [2, 4, 8]
+    batch_size: [8, 16, 32]
+    learning_rate: [1e-5, 5e-4]
+    weight_decay: [1e-6, 5e-4]
+    loss_type: [mse, weighted_mse, huber]
+    loss_alpha: [1.0, 3.0]
+    warmup_epochs: [3, 10]
+
+outputs:
+  # Directories
+  checkpoint_dir: ./checkpoints
+  results_dir: ./results
+  figures_dir: ./figures
+  
+  # Saving
+  save_best_only: true
+  save_frequency: 10  # Save every N epochs
+  
+  # Logging
+  log_level: INFO
+  tensorboard: true
+  wandb: false  # Set true if using Weights & Biases
+
+device:
+  # Auto-detect or specify
+  cuda: auto  # Options: auto, true, false
+  gpu_id: 0

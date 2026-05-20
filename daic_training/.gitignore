@@ -1,0 +1,31 @@
+__pycache__/
+*.py[cod]
+*.so
+.Python
+
+# Checkpoints & outputs
+checkpoints/
+outputs/
+results/
+figures/
+*.pt
+*.pth
+*.pkl
+
+# Logs
+*.log
+runs/
+
+# Jupyter
+.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Data
+*.csv
+data/

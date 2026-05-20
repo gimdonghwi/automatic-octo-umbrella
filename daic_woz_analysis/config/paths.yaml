@@ -1,0 +1,29 @@
+# DAIC-WOZ Dataset Configuration
+# Override with environment variables: export DAIC_ROOT=/your/path
+
+data:
+  root_dir: ${DAIC_ROOT:/mnt/hdd1/dave_home/dave_data}
+  
+  splits:
+    train: train_split_Depression_AVEC2017.csv
+    dev: dev_split_Depression_AVEC2017.csv
+    test: full_test_split.csv
+  
+  embeddings:
+    audio_dir: audio_embeddings
+    text_dir: text_embeddings
+  
+  raw:
+    transcript: DAIC-WOZ_transcription_data.csv
+    
+outputs:
+  reports: ./reports
+  figures: ./reports/figures
+  
+visualization:
+  figure_size: [12, 6]
+  dpi: 300
+  style: seaborn-v0_8-darkgrid
+  color_palette:
+    depressed: "#E74C3C"
+    non_depressed: "#3498DB"

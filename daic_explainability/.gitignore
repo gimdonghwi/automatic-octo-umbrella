@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+.Python
+
+# Outputs
+explainability_results/
+outputs/
+*.png
+*.json
+
+# Jupyter
+.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store

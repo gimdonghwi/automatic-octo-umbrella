@@ -1,0 +1,90 @@
+# DAIC-WOZ Model Explainability Configuration
+
+paths:
+  # Model artifacts
+  model_checkpoint: ${MODEL_PATH:./checkpoints/best_model.pt}
+  params_json: ${PARAMS_PATH:./results/optuna_results.json}
+  
+  # Data
+  preprocessed_data: ${DATA_PATH:../../data/DAIC-WOZ/preprocessed_sequence_dataset.pkl}
+  metadata: ${META_PATH:../../data/DAIC-WOZ/metadataset.csv}
+  
+  # Outputs
+  output_dir: ./explainability_results
+
+data:
+  phq_max: 24.0
+  depression_threshold: 10
+  max_seq_len: 100
+  
+  # Question type names
+  qtype_names:
+    - casual
+    - background
+    - emotional
+    - clinical
+    - other
+
+visualization:
+  # Image settings
+  dpi: 150
+  format: png
+  style: seaborn-v0_8-whitegrid
+  
+  # Color palette (professional)
+  colors:
+    primary: "#2E86AB"
+    secondary: "#A23B72"
+    success: "#28A745"
+    warning: "#F18F01"
+    danger: "#C73E1D"
+    
+    # Modality colors
+    audio: "#3498DB"
+    linguistic: "#27AE60"
+    wavlm: "#2E86AB"
+    wav2vec: "#85C1E9"
+    
+    # Label colors
+    depression: "#E74C3C"
+    normal: "#2ECC71"
+  
+  # Question type colors
+  qtype_colors:
+    casual: "#3498DB"      # Blue
+    background: "#9B59B6"  # Purple
+    emotional: "#E67E22"   # Orange
+    clinical: "#E74C3C"    # Red
+    other: "#95A5A6"       # Gray
+
+analysis:
+  # Case study selection
+  generate_case_studies: true
+  
+  case_types:
+    - best_true_positive      # Best predicted depression case
+    - best_true_negative      # Best predicted normal case
+    - worst_false_positive    # Most severe over-prediction
+    - worst_false_negative    # Most severe under-prediction
+  
+  # Additional analyses
+  aggregate_by_group: true  # Normal vs Depression
+  top_k_utterances: 5       # Top K most attended utterances
+
+outputs:
+  # Directory structure
+  summary_dir: summary
+  case_studies_dir: case_studies
+  
+  # What to generate
+  plots:
+    prediction_scatter: true
+    error_analysis: true
+    qtype_importance: true
+    modality_comparison: true
+    individual_reports: true
+  
+  # Save formats
+  save_json: true
+  save_txt_reports: true
+  save_csv: true

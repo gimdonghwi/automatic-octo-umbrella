@@ -1,0 +1,71 @@
+# DAIC-WOZ Preprocessing Configuration
+
+data:
+  base_path: ${DAIC_ROOT:../../data/DAIC-WOZ}
+  output_filename: preprocessed_sequence_dataset.pkl
+  
+  # Participants to exclude (known issues)
+  exception_ids:
+    - "451"
+    - "458"
+    - "480"
+
+audio:
+  sample_rate: 16000
+  
+  # Utterance duration constraints (seconds)
+  max_utterance_duration: 15.0
+  min_utterance_duration: 0.5
+  
+  # Merge utterances if pause is less than this (seconds)
+  max_pause_for_merge: 2.0
+  
+  # Noise reduction parameters
+  noise_reduction:
+    stationary: true
+    prop_decrease: 0.5
+
+models:
+  wav2vec:
+    name: facebook/wav2vec2-base-960h
+    hidden_layer: 7
+    embedding_dim: 768
+  
+  wavlm:
+    name: microsoft/wavlm-base
+    hidden_layer: 7
+    embedding_dim: 768
+  
+  # GPU settings
+  device: cuda  # auto-detected if available
+
+question_types:
+  # Simplified question type taxonomy
+  categories:
+    casual: 0
+    background: 1
+    emotional: 2
+    clinical: 3
+    other: 4
+  
+  # Mapping from detailed to simplified types
+  mapping:
+    "small talk": casual
+    "preference": casual
+    "open-ended encouragement": casual
+    "daily habits / lifestyle": background
+    "social / family / relationship": background
+    "self-perception / personality": background
+    "emotion / mood": emotional
+    "depression symptoms direct": clinical
+    "other": other
+
+processing:
+  # Logging verbosity
+  verbose: true
+  
+  # Progress bar
+  show_progress: true
+  
+  # Save intermediate checkpoints
+  checkpoint_interval: 50  # Save every N participants
